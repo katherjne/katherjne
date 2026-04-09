@@ -7,27 +7,49 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500&family=Cormorant+Garamond:ital,wght@1,300;1,400&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--cream:#F2EDE4;--black:#1a1a1a;--gray:#7a7570;--light-gray:#ddd8ce;--max:900px}
+:root{--cream:#F2EDE4;--black:#1a1a1a;--gray:#7a7570;--light-gray:#ddd8ce;--max:900px;--bg:var(--cream);--fg:var(--black)}
 html{scroll-behavior:smooth}
-body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--black);line-height:1.6}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);line-height:1.6;transition:background .4s,color .4s}
+body.dark{--bg:#1a1917;--fg:#F2EDE4;--light-gray:#333;--gray:#9a9590}
 a{color:inherit;text-decoration:none}
 
-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(242,237,228,0.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--light-gray)}
-.nav-inner{max-width:var(--max);margin:0 auto;padding:1.1rem 2rem;display:flex;justify-content:space-between;align-items:center}
-.nav-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:400;letter-spacing:.02em}
-.nav-links{display:flex;gap:2rem;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;font-weight:400}
+/* LOADER */
+#loader{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:center;z-index:1000;transition:opacity .6s}
+#loader.hide{opacity:0;pointer-events:none}
+.loader-initials{font-family:'Playfair Display',serif;font-size:4rem;font-weight:900;color:#F2EDE4;letter-spacing:.1em;animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* PROGRESS BAR */
+#progress{position:fixed;top:0;left:0;height:2px;background:var(--black);z-index:200;width:0%;transition:width .1s linear}
+body.dark #progress{background:#F2EDE4}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(242,237,228,0.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--light-gray);transition:background .4s}
+body.dark nav{background:rgba(26,25,23,0.95)}
+.nav-inner{margin:0 auto;padding:1.1rem 2rem;display:flex;justify-content:space-between;align-items:center}
+.nav-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:400}
+.nav-right{display:flex;align-items:center;gap:2rem}
+.nav-links{display:flex;gap:2rem;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase}
 .nav-links a{color:var(--gray);transition:color .2s}
-.nav-links a:hover{color:var(--black)}
+.nav-links a:hover{color:var(--fg)}
+.dark-toggle{background:none;border:1px solid var(--light-gray);color:var(--gray);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:.3rem .7rem;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.dark-toggle:hover{border-color:var(--fg);color:var(--fg)}
 
 .wrap{max-width:var(--max);margin:0 auto;padding:0 2rem}
 
+/* FADE IN ON SCROLL */
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.fade-in.visible{opacity:1;transform:none}
+
 /* HERO */
-.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:5rem;padding-top:6rem;border-bottom:1px solid var(--light-gray)}
-.hero-eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gray);margin-bottom:1.2rem}
-.hero-title{font-family:'Playfair Display',serif;font-size:clamp(3rem,8vw,6.5rem);font-weight:900;line-height:.92;letter-spacing:-.01em;margin-bottom:.5rem}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:5rem;padding-top:6rem;padding-left:2rem;padding-right:2rem;border-bottom:1px solid var(--light-gray)}
+.hero-eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gray);margin-bottom:1.2rem;width:100%}
+.hero-title{font-family:'Playfair Display',serif;font-weight:900;line-height:.92;letter-spacing:-.01em;margin-bottom:.5rem;font-size:clamp(4rem,11.5vw,11.5vw);width:100%;text-align:left}
 .hero-title .light{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;display:block;color:var(--gray);letter-spacing:.02em;font-size:.58em}
-.hero-divider{width:48px;height:1px;background:var(--black);margin:2rem 0}
+.hero-bottom{width:100%}
+.hero-divider{width:48px;height:1px;background:var(--fg);margin:2rem 0;transition:background .4s}
 .hero-sub{font-size:.85rem;color:var(--gray);max-width:280px;line-height:1.8;font-weight:300}
+.hero-meta{display:flex;gap:2rem;margin-top:2rem;font-size:.72rem;color:var(--gray);letter-spacing:.05em}
 
 /* ABOUT */
 #about{padding:5rem 0;border-bottom:1px solid var(--light-gray)}
@@ -47,23 +69,28 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(242,237,228,
 .work-title{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900}
 .work-count{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gray)}
 
-.project{border-top:1px solid var(--light-gray);padding:2.5rem 0;cursor:pointer}
-.project:hover .project-title{text-decoration:underline;text-underline-offset:4px}
+.project{border-top:1px solid var(--light-gray);padding:2.5rem 0;cursor:pointer;transition:padding-left .25s,padding-right .25s,background .25s}
+.project:hover{background:rgba(0,0,0,0.025);padding-left:.75rem;padding-right:.75rem}
+body.dark .project:hover{background:rgba(255,255,255,0.03)}
 .proj-top{display:grid;grid-template-columns:3rem 1fr 1fr;gap:1.5rem;align-items:start}
 .proj-num{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:400;color:var(--gray);padding-top:.2rem}
 .project-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;line-height:1.05;margin-bottom:.8rem}
 .proj-org{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);margin-bottom:.8rem}
 .project-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.8rem}
 .tag{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:.22rem .55rem;border:1px solid var(--light-gray);color:var(--gray)}
-.project-status{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:.22rem .55rem;background:var(--black);color:var(--cream);display:inline-block}
-.project-status.complete{background:transparent;border:1px solid var(--black);color:var(--black)}
+.project-status{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:.22rem .55rem;background:var(--fg);color:var(--bg);display:inline-block;transition:background .4s,color .4s}
+.project-status.complete{background:transparent;border:1px solid var(--fg);color:var(--fg)}
 .project-desc{font-size:.88rem;line-height:1.85;color:var(--gray);font-weight:300}
 .proj-role{font-size:.75rem;color:var(--gray);margin-top:.8rem}
-.proj-role strong{color:var(--black);font-weight:500}
+.proj-role strong{color:var(--fg);font-weight:500}
+.proj-cta{display:inline-flex;align-items:center;gap:.4rem;margin-top:1rem;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--fg);border:1px solid var(--fg);padding:.35rem .75rem;transition:background .2s,color .2s}
+.project:hover .proj-cta{background:var(--fg);color:var(--bg)}
 
 /* DETAIL */
-.detail-panel{display:none;background:var(--black);color:var(--cream);margin-top:1rem}
-.detail-panel.open{display:block}
+.detail-panel{display:none;background:var(--black);color:#F2EDE4;margin-top:0}
+body.dark .detail-panel{background:#111}
+.detail-panel.open{display:block;animation:slideDown .4s ease}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
 .detail-inner{padding:2.5rem}
 .detail-cols{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;margin-bottom:2rem}
 .detail-panel h3{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:1rem}
@@ -76,10 +103,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(242,237,228,
 .img-item p{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#666;margin-bottom:.35rem}
 .img-item img{width:100%;display:block;border-radius:2px}
 .img-full{grid-column:1/-1}
-.proto-link{display:inline-block;margin-top:1.2rem;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cream);border:1px solid #555;padding:.45rem .9rem;transition:background .2s}
+.proto-link{display:inline-block;margin-top:1.2rem;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:#F2EDE4;border:1px solid #555;padding:.45rem .9rem;transition:background .2s}
 .proto-link:hover{background:#222}
 .close-btn{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:#666;cursor:pointer;text-align:right;padding-top:1.5rem}
-.close-btn:hover{color:var(--cream)}
+.close-btn:hover{color:#F2EDE4}
 
 /* CONTACT */
 #contact{padding:5rem 0}
@@ -106,30 +133,45 @@ footer{border-top:1px solid var(--light-gray);padding:1.5rem 0}
 </head>
 <body>
 
+<div id="loader"><div class="loader-initials">KJ</div></div>
+<div id="progress"></div>
+
 <nav>
   <div class="nav-inner">
     <span class="nav-name">Katherine Jiang</span>
-    <div class="nav-links">
-      <a href="#about">About</a>
-      <a href="#work">Work</a>
-      <a href="#contact">Contact</a>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#work">Work</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <button class="dark-toggle" onclick="toggleDark()" id="darkBtn">Dark</button>
     </div>
   </div>
 </nav>
 
-<div class="hero wrap">
+<div class="hero fade-in">
   <div class="hero-eyebrow">Product Design · Software Development</div>
+  <div style="display:flex;justify-content:center;margin:1.5rem 0">
+    <img src="collage.png" alt="Katherine's collage" style="width:220px;height:280px;object-fit:cover;border-radius:4px"/>
+  </div>
   <h1 class="hero-title">
     <span class="light">Katherine's</span>
     PORTFOLIO
   </h1>
-  <div class="hero-divider"></div>
-  <p class="hero-sub">First year at Northeastern University — building ethical, high-impact digital tools.</p>
+  <div class="hero-bottom">
+    <div class="hero-divider"></div>
+    <p class="hero-sub">First year at Northeastern University — building ethical, high-impact digital tools.</p>
+    <div class="hero-meta">
+      <span>📍 Irvine, CA</span>
+      <span>📍 Boston, MA</span>
+    </div>
+  </div>
 </div>
 
 <section id="about">
   <div class="wrap">
-    <div class="about-grid">
+    <div class="about-grid fade-in">
       <img src="profile.jpg" alt="Katherine Jiang" class="about-img"/>
       <div>
         <div class="section-eyebrow">About</div>
@@ -150,27 +192,25 @@ footer{border-top:1px solid var(--light-gray);padding:1.5rem 0}
 
 <section id="work">
   <div class="wrap">
-    <div class="work-header">
+    <div class="work-header fade-in">
       <h2 class="work-title">WORK</h2>
       <span class="work-count">03 Projects</span>
     </div>
 
-    <!-- Project 1 -->
-    <div class="project" onclick="toggleDetail('d1')">
+    <div class="project fade-in" onclick="toggleDetail('d1')">
       <div class="proj-top">
         <div class="proj-num">01</div>
         <div>
           <div class="proj-org">Scout</div>
           <h3 class="project-title">Superpower<br>Mentors</h3>
           <div class="project-tags">
-            <span class="tag">UI/UX</span>
-            <span class="tag">Branding</span>
-            <span class="tag">Figma</span>
+            <span class="tag">UI/UX</span><span class="tag">Branding</span><span class="tag">Figma</span>
           </div>
           <span class="project-status">In Progress</span>
+          <div><span class="proj-cta">View Case Study ↓</span></div>
         </div>
         <div>
-          <p class="project-desc">A strategic rebrand of SuperPower Mentors' website to better communicate impact, trust, and value — particularly to families — while remaining inclusive of students, mentors, and partner organizations. Refinements to visual language, storytelling, and user experience.</p>
+          <p class="project-desc">A strategic rebrand of SuperPower Mentors' website to better communicate impact, trust, and value — particularly to families — while remaining inclusive of students, mentors, and partner organizations.</p>
           <p class="proj-role">Role: <strong>Junior Designer &amp; Developer</strong></p>
         </div>
       </div>
@@ -180,7 +220,7 @@ footer{border-top:1px solid var(--light-gray);padding:1.5rem 0}
         <div class="detail-cols">
           <div>
             <h3>Project Details</h3>
-            <p>Strategic retouch of SuperPower Mentors' brand identity and website, focusing on visual language, storytelling, and UX refinements for families, students, mentors, and partners.</p>
+            <p>Strategic retouch of SuperPower Mentors' brand identity and website, focusing on visual language, storytelling, and UX refinements.</p>
             <div style="margin-top:1rem">
               <div class="detail-step"><span class="step-num">01</span><span class="step-text">Mood boarding — 4 visual directions balancing warmth and growth</span></div>
               <div class="detail-step"><span class="step-num">02</span><span class="step-text">Color palette — Purple, Yellow, and Black as primary brand colors</span></div>
@@ -190,7 +230,7 @@ footer{border-top:1px solid var(--light-gray);padding:1.5rem 0}
           </div>
           <div>
             <h3>Design System</h3>
-            <p>Color palette draws on deep purple (#571477), vibrant orange, and warm yellows to communicate energy and trust. Pages designed: Home, Mentoring, Blog, About Us, Community, Safety.</p>
+            <p>Color palette draws on deep purple (#571477), vibrant orange, and warm yellows. Pages: Home, Mentoring, Blog, About Us, Community, Safety.</p>
           </div>
         </div>
         <div class="img-grid">
@@ -204,22 +244,20 @@ footer{border-top:1px solid var(--light-gray);padding:1.5rem 0}
       </div>
     </div>
 
-    <!-- Project 2 -->
-    <div class="project" onclick="toggleDetail('d2')">
+    <div class="project fade-in" onclick="toggleDetail('d2')">
       <div class="proj-top">
         <div class="proj-num">02</div>
         <div>
           <div class="proj-org">Oasis</div>
           <h3 class="project-title">Groove<br>Scout</h3>
           <div class="project-tags">
-            <span class="tag">React</span>
-            <span class="tag">Node.js</span>
-            <span class="tag">Frontend</span>
+            <span class="tag">React</span><span class="tag">Node.js</span><span class="tag">Frontend</span>
           </div>
           <span class="project-status complete">Complete</span>
+          <div><span class="proj-cta">View Case Study ↓</span></div>
         </div>
         <div>
-          <p class="project-desc">A unified vinyl record search platform aggregating listings from multiple marketplaces into a single destination — so collectors and casual listeners can instantly discover availability, condition, and lowest price.</p>
+          <p class="project-desc">A unified vinyl record search platform aggregating listings from multiple marketplaces — so collectors and casual listeners can instantly discover availability, condition, and lowest price.</p>
           <p class="proj-role">Role: <strong>Front-end Developer</strong></p>
         </div>
       </div>
@@ -239,7 +277,7 @@ footer{border-top:1px solid var(--light-gray);padding:1.5rem 0}
           </div>
           <div>
             <h3>Technical Stack</h3>
-            <p>React frontend, Node.js backend, and CSS for a clean minimal dark-themed UI. The homepage centers around a single search bar — keeping the experience focused and frictionless.</p>
+            <p>React frontend, Node.js backend, CSS for a clean minimal dark-themed UI centered around a single search experience.</p>
           </div>
         </div>
         <div class="img-grid two">
@@ -250,22 +288,20 @@ footer{border-top:1px solid var(--light-gray);padding:1.5rem 0}
       </div>
     </div>
 
-    <!-- Project 3 -->
-    <div class="project" onclick="toggleDetail('d3')">
+    <div class="project fade-in" onclick="toggleDetail('d3')">
       <div class="proj-top">
         <div class="proj-num">03</div>
         <div>
           <div class="proj-org">Personal</div>
           <h3 class="project-title">Emerald City<br>Pet Shelter</h3>
           <div class="project-tags">
-            <span class="tag">UX Design</span>
-            <span class="tag">Dashboard</span>
-            <span class="tag">Figma</span>
+            <span class="tag">UX Design</span><span class="tag">Dashboard</span><span class="tag">Figma</span>
           </div>
           <span class="project-status complete">Complete</span>
+          <div><span class="proj-cta">View Case Study ↓</span></div>
         </div>
         <div>
-          <p class="project-desc">A desktop animal health dashboard for shelter volunteers to log daily observations, medical appointments, vaccinations, and behavioral notes — replacing paper forms and spreadsheets for 30+ volunteers.</p>
+          <p class="project-desc">A desktop animal health dashboard for shelter volunteers to log daily observations, medical appointments, vaccinations, and behavioral notes — replacing paper forms for 30+ volunteers.</p>
           <p class="proj-role">Role: <strong>Software Designer</strong></p>
         </div>
       </div>
@@ -304,7 +340,7 @@ footer{border-top:1px solid var(--light-gray);padding:1.5rem 0}
 </section>
 
 <section id="contact">
-  <div class="wrap">
+  <div class="wrap fade-in">
     <div class="contact-grid">
       <div>
         <div class="section-eyebrow">Contact</div>
@@ -330,11 +366,40 @@ footer{border-top:1px solid var(--light-gray);padding:1.5rem 0}
 </footer>
 
 <script>
+// LOADER
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.getElementById('loader').classList.add('hide');
+  },1200);
+});
+
+// PROGRESS BAR
+window.addEventListener('scroll',()=>{
+  var s=document.documentElement.scrollTop;
+  var h=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('progress').style.width=(s/h*100)+'%';
+});
+
+// SCROLL FADE IN
+var obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+// Hero visible immediately after load
+setTimeout(()=>document.querySelector('.hero').classList.add('visible'),1300);
+
+// DARK MODE
+function toggleDark(){
+  document.body.classList.toggle('dark');
+  document.getElementById('darkBtn').textContent=document.body.classList.contains('dark')?'Light':'Dark';
+}
+
+// PROJECT TOGGLE
 function toggleDetail(id){
   var p=document.getElementById(id);
   var open=p.classList.contains('open');
   document.querySelectorAll('.detail-panel').forEach(x=>x.classList.remove('open'));
-  if(!open)p.classList.add('open');
+  if(!open){p.classList.add('open');setTimeout(()=>p.scrollIntoView({behavior:'smooth',block:'nearest'}),50)}
 }
 function closeDetail(id){document.getElementById(id).classList.remove('open')}
 </script>
